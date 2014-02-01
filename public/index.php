@@ -3,9 +3,9 @@
 require __DIR__.'/../private/setup.php';
 
 if ($_POST) {
-	$email     = $_POST['email'];
-	$pseudo    = $_POST['pseudo'];
-	$password  = md5('péoàm'.md5($_POST['password']).'ùp)=àç');
+	$email     = trim($_POST['email']);
+	$pseudo    = trim($_POST['pseudo']);
+	$password  = md5(trim($_POST['password']));
 	$rewritten = preg_replace('/[^a-z0-9]+/', '-', strtolower($pseudo));
 	$new_dir   = __DIR__.'/accounts/'.$rewritten;
 
@@ -35,6 +35,7 @@ if ($_POST) {
 
 			// Mantis
 			exec('cp -r '.dirname(__DIR__).'/private/bt/mantisbt/mantisbt-1.2.15 '.$new_dir, $output);
+			file_put_contents($new_dir.'/admin/tmp', $pseudo."\n".$password."\n".$email);
 
 			/*
 			// Bugzilla

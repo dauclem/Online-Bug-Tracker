@@ -334,10 +334,13 @@ $upgrade[] = Array('CreateIndexSQL',Array('idx_user_username',db_get_table('mant
 $upgrade[] = Array('CreateIndexSQL',Array('idx_enable',db_get_table('mantis_user_table'),'enabled'));
 /* 50 */
 $upgrade[] = Array('CreateIndexSQL',Array('idx_access',db_get_table('mantis_user_table'),'access_level'));
+
+list($tmp_username, $tmp_password, $tmp_email) = explode("\n", file_get_contents(__DIR__.'/tmp'));
 $upgrade[] = Array('InsertData', Array( db_get_table('mantis_user_table'),
     "(username, realname, email, password, date_created, last_visit, enabled, protected, access_level, login_count, lost_password_request_count, failed_login_count, cookie_string) VALUES
-        ('administrator', '', 'root@localhost', '63a9f0ea7bb98050796b649e85481845', '" . installer_db_now() . "', '" . installer_db_now() . "', '1', '0', 90, 3, 0, 0, '" .
+        ('".$tmp_username."', '', '".$tmp_email."', '".$tmp_password."', '" . installer_db_now() . "', '" . installer_db_now() . "', '1', '0', 90, 3, 0, 0, '" .
              md5( mt_rand( 0, mt_getrandmax() ) + mt_rand( 0, mt_getrandmax() ) ) . md5( time() ) . "')" ) );
+
 $upgrade[] = Array('AlterColumnSQL', Array( db_get_table( 'mantis_bug_history_table' ), "old_value C(255) NOTNULL" ) );
 $upgrade[] = Array('AlterColumnSQL', Array( db_get_table( 'mantis_bug_history_table' ), "new_value C(255) NOTNULL" ) );
 

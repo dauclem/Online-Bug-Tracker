@@ -973,11 +973,16 @@ if( 7 == $t_install_state ) {
 	# cleanup and launch upgrade
 	?>
 <p>Install was successful.</p>
-<?php if( $f_db_exists ) {
-	exec('rm -rf '.__DIR__);
-	header('Location: ../login_page.php');
-	exit;
-	?>
+<?php
+
+exec('rm -rf '.__DIR__);
+header('Location: /login_page.php');
+exit;
+
+
+?>
+
+<?php if( $f_db_exists ) {?>
 <p><a href="../login_page.php">Continue</a> to log into Mantis</p>
 <?php
 	} else {?>
