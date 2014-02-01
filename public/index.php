@@ -28,7 +28,9 @@ if ($_POST) {
 							 .'RewriteRule ^(.*)$ accounts/'.$rewritten.'/$1 [L,QSA]'."\n";
 
 			if (!file_exists($htaccess_file)) {
-				file_put_contents($htaccess_file, 'RewriteEngine On'."\n");
+				file_put_contents($htaccess_file, 'RewriteEngine On'."\n\n"
+												  .'RewriteCond %{HTTP_HOST} ^'.$main_domain.'$'."\n"
+												  .'RewriteRule ^accounts/([^/]+)/(.*)$ http://$1.'.$main_domain.'/$2 [R=301,L,QSA]'."\n");
 			}
 			file_put_contents($htaccess_file, file_get_contents($htaccess_file)."\n".$rewrite_rule);
 
