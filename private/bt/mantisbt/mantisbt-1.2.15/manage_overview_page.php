@@ -57,7 +57,7 @@
 
 <?php
 	$t_is_admin = current_user_is_administrator(); 
-	if ( $t_is_admin ) {
+	if ( false && $t_is_admin ) {
 ?>
 <tr <?php echo helper_alternate_class() ?>>
 <td class="category"><?php echo lang_get( 'site_path' ) ?></td>

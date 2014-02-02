@@ -76,9 +76,11 @@ function print_info_row( $p_description, $p_value ) {
 <td class="form-title" width="30%" colspan="2"><?php echo lang_get( 'path_information' ) ?></td>
 </tr>
 <?php
+	/*
 	print_info_row( lang_get( 'site_path' ), config_get( 'absolute_path' ) );
 	print_info_row( lang_get( 'core_path' ), config_get( 'core_path' ) );
 	print_info_row( lang_get( 'plugin_path' ), config_get( 'plugin_path' ) );
+	*/
 ?>
 </table>
 <?php
