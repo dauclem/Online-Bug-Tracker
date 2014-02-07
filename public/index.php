@@ -3,13 +3,31 @@
 require __DIR__.'/../private/setup.php';
 
 if ($_POST) {
-	$email     = trim($_POST['email']);
-	$pseudo    = trim($_POST['pseudo']);
-	$password  = md5(trim($_POST['password']));
-	$rewritten = preg_replace('/[^a-z0-9]+/', '-', strtolower($pseudo));
-	$new_dir   = __DIR__.'/accounts/'.$rewritten;
+	$email       = trim($_POST['email']);
+	$pseudo      = trim($_POST['pseudo']);
+	$password    = md5(trim($_POST['password']));
+	$rewritten   = preg_replace('/[^a-z0-9]+/', '-', strtolower($pseudo));
+	$new_dir     = __DIR__.'/accounts/'.$rewritten;
+	$main_domain = implode('.', array_slice(explode('.', $_SERVER['SERVER_NAME']), -2));
 
-	if (!file_exists($new_dir)) {
+	if (file_exists($new_dir)) {
+		// Check if account already exists
+		$sth = $pdo->prepare('SELECT `rewritten`
+								FROM `account`
+ 								WHERE (`email` = :email OR `pseudo` = :pseudo)
+ 									AND `password` = :password');
+		$sth->execute(array(
+						  'email'    => $email,
+						  'pseudo'   => $pseudo,
+						  'password' => $password,
+					  ));
+		$result    = $sth->fetch(PDO::FETCH_ASSOC);
+		$rewritten = $result['rewritten'];
+		if ($rewritten) {
+			header('Status: 302 Found', true, 302);
+			header('Location: http://'.$rewritten.'.'.$main_domain.'/');
+		}
+	} else {
 		$sth = $pdo->prepare('INSERT INTO `account` (`email`, `pseudo`, `password`, `rewritten`)
 								VALUES (:email, :pseudo, :password, :rewritten)');
 		$sth->execute(array(
@@ -21,7 +39,6 @@ if ($_POST) {
 		$account_id = $pdo->lastInsertId();
 
 		if ($account_id) {
-			$main_domain   = implode('.', array_slice(explode('.', $_SERVER['SERVER_NAME']), -2));
 			$htaccess_file = __DIR__.'/.htaccess';
 			$rewrite_rule  = 'RewriteCond %{HTTP_HOST} ^'.$rewritten.'.'.$main_domain.'$'."\n"
 							 .'RewriteCond %{REQUEST_URI} !^/accounts/'.$rewritten.'/'."\n"
@@ -54,6 +71,7 @@ if ($_POST) {
 
 
 			// Mantis
+			header('Status: 302 Found', true, 302);
 			header('Location: http://'.$rewritten.'.'.$main_domain.'/admin/install.php');
 
 			/*
