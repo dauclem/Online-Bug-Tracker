@@ -199,7 +199,7 @@ if( $t_config_exists ) {
 	# read control variables with defaults
 	$f_hostname = $config['pdo_host'];
 	$f_db_type = 'mysqli';
-	$f_database_name = $config['current_account'].'_mantis';
+	$f_database_name = 'obt_'.$config['current_account'].'_mantis';
 	$f_db_username = $config['pdo_username'];
 	$f_db_password = $config['pdo_password'];
 	if( CONFIGURED_PASSWORD == $f_db_password ) {
